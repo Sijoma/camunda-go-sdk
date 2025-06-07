@@ -1,5 +1,6 @@
 go 1.24
 
+// This makes sure we use the local client lib for the examples
 use (
 	examples/topology-request
 	.

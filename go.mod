@@ -1,4 +1,4 @@
-module github.com/camunda/go-sdk
+module github.com/sijoma/camunda-go-sdk
 
 go 1.24
 
