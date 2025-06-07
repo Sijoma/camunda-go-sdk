@@ -7,7 +7,7 @@ import (
 	"net/url"
 	"os"
 
-	camunda "github.com/sijoma/camunda-go-sdk"
+	"github.com/sijoma/camunda-go-sdk"
 )
 
 func main() {
