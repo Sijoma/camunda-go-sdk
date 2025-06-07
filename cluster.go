@@ -5,33 +5,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"net/http/httputil"
 	"path"
 )
-
-type TopologyResponse struct {
-	Brokers []struct {
-		NodeId     int    `json:"nodeId"`
-		Host       string `json:"host"`
-		Port       int    `json:"port"`
-		Partitions []struct {
-			PartitionId int    `json:"partitionId"`
-			Role        string `json:"role"`
-			Health      string `json:"health"`
-		} `json:"partitions"`
-		Version string `json:"version"`
-	} `json:"brokers"`
-	ClusterSize           int    `json:"clusterSize"`
-	PartitionsCount       int    `json:"partitionsCount"`
-	ReplicationFactor     int    `json:"replicationFactor"`
-	GatewayVersion        string `json:"gatewayVersion"`
-	LastCompletedChangeId string `json:"lastCompletedChangeId"`
-}
-
-func (t TopologyResponse) String() string {
-	// Pretty-print
-	prettyJSON, _ := json.MarshalIndent(t, "", "  ")
-	return string(prettyJSON)
-}
 
 type Cluster struct {
 	client *Client
@@ -54,7 +30,8 @@ func (c Cluster) Topology(ctx context.Context) (*TopologyResponse, error) {
 	defer res.Body.Close()
 
 	if res.StatusCode >= 299 {
-		return nil, fmt.Errorf("received status code %d", res.StatusCode)
+		dump, _ := httputil.DumpResponse(res, true)
+		return nil, fmt.Errorf("received status code %d: %s", res.StatusCode, dump)
 	}
 
 	var topology TopologyResponse
@@ -66,4 +43,23 @@ func (c Cluster) Topology(ctx context.Context) (*TopologyResponse, error) {
 	}
 
 	return &topology, nil
+}
+
+type TopologyResponse struct {
+	Brokers []struct {
+		NodeId     int    `json:"nodeId"`
+		Host       string `json:"host"`
+		Port       int    `json:"port"`
+		Partitions []struct {
+			PartitionId int    `json:"partitionId"`
+			Role        string `json:"role"`
+			Health      string `json:"health"`
+		} `json:"partitions"`
+		Version string `json:"version"`
+	} `json:"brokers"`
+	ClusterSize           int    `json:"clusterSize"`
+	PartitionsCount       int    `json:"partitionsCount"`
+	ReplicationFactor     int    `json:"replicationFactor"`
+	GatewayVersion        string `json:"gatewayVersion"`
+	LastCompletedChangeId string `json:"lastCompletedChangeId"`
 }

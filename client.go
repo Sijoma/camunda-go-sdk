@@ -30,6 +30,7 @@ func WithTransport(transport http.RoundTripper) Option {
 
 // WithBaseURL sets the base URL for the client
 func WithBaseURL(baseURL url.URL) Option {
+	// Ensure path ends with /v2
 	if !strings.HasSuffix(baseURL.Path, "v2") {
 		baseURL.Path, _ = url.JoinPath(baseURL.Path, "v2")
 	}

@@ -18,17 +18,20 @@ func TestWithCamunda(t *testing.T) {
 	if err != nil {
 		t.Fatalf("failed to setup camunda: %v", err)
 	}
+	// Setup Client
+	camundaURL, err := suite.CamundaEndpoint()
+	require.NoError(t, err)
+	baseURL, _ := url.Parse(camundaURL)
+	c8 := camunda.NewClient(
+		camunda.WithBaseURL(*baseURL),
+	)
 
 	t.Run("Query Topology", func(t *testing.T) {
-		camundaURL, err := suite.CamundaEndpoint()
-		require.NoError(t, err)
-		baseURL, _ := url.Parse(camundaURL)
-		c8 := camunda.NewClient(
-			camunda.WithBaseURL(*baseURL),
-		)
 		topology, err := c8.Cluster.Topology(t.Context())
 		require.NoError(t, err)
 
 		assert.Equal(t, 1, topology.PartitionsCount)
+		assert.Lenf(t, topology.Brokers, 1, "we have one broker")
+		assert.Equal(t, topology.ClusterSize, 1)
 	})
 }

@@ -2,19 +2,17 @@ package internal
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"testing"
 	"time"
 
-	"github.com/docker/go-connections/nat"
 	"github.com/testcontainers/testcontainers-go"
 	"github.com/testcontainers/testcontainers-go/wait"
 )
 
 type TestSuite struct {
 	host             string
-	gatewayPort      nat.Port
+	gatewayEndpoint  string
 	camundaContainer testcontainers.Container
 	t                testing.TB
 }
@@ -35,10 +33,10 @@ func NewTestSuite(t testing.TB, ctx context.Context) (*TestSuite, error) {
 }
 
 func (ts *TestSuite) CamundaEndpoint() (string, error) {
-	if ts.host == "" || ts.gatewayPort.Int() == 0 {
-		return "", errors.New("host or gatewayPort not initialized")
+	if ts.gatewayEndpoint == "" {
+		return "", fmt.Errorf("gateway endpoint not initialized")
 	}
-	return "http://" + ts.host + ":" + ts.gatewayPort.Port(), nil
+	return ts.gatewayEndpoint, nil
 }
 
 func (ts *TestSuite) setupCamunda(ctx context.Context) error {
@@ -61,17 +59,10 @@ func (ts *TestSuite) setupCamunda(ctx context.Context) error {
 	}
 	ts.camundaContainer = camundaContainer
 
-	host, err := camundaContainer.Host(ctx)
+	ts.gatewayEndpoint, err = camundaContainer.PortEndpoint(ctx, "8080/tcp", "http")
 	if err != nil {
 		return err
 	}
-	port, err := camundaContainer.MappedPort(ctx, "8080")
-	if err != nil {
-		return err
-	}
-
-	ts.host = host
-	ts.gatewayPort = port
 	return nil
 }
 
