@@ -8,8 +8,8 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/camunda/go-sdk"
-	"github.com/camunda/go-sdk/internal"
+	"github.com/sijoma/camunda-go-sdk"
+	"github.com/sijoma/camunda-go-sdk/internal"
 )
 
 func TestWithCamunda(t *testing.T) {
