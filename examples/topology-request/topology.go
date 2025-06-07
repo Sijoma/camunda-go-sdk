@@ -25,10 +25,14 @@ func main() {
 
 	fmt.Println("EXAMPLE: Config", clientID, clientSecret, tokenURL, audience, scopes, baseURL)
 
-	c8 := camunda.NewClient(
+	c8, err := camunda.NewClient(
 		camunda.WithBaseURL(*baseURL),
 		camunda.WithOAuth(clientID, clientSecret, tokenURL, audience, scopes),
 	)
+	if err != nil {
+		fmt.Println("failed creating client", err)
+		return
+	}
 	topology, err := c8.Cluster.Topology(ctx)
 	if err != nil {
 		fmt.Println(err)

@@ -14,17 +14,18 @@ type Client struct {
 }
 
 // Option represents a configuration option for the Client
-type Option func(*Client)
+type Option func(*Client) error
 
 // WithTransport sets a custom transport
 func WithTransport(transport http.RoundTripper) Option {
-	return func(c *Client) {
+	return func(c *Client) error {
 		if cookieAuthTransport, ok := c.httpClient.Transport.(cookieAuth); ok {
 			cookieAuthTransport.wrapped = transport
 			c.httpClient.Transport = cookieAuthTransport
 		} else {
 			c.httpClient.Transport = transport
 		}
+		return nil
 	}
 }
 
@@ -35,8 +36,9 @@ func WithBaseURL(baseURL url.URL) Option {
 		baseURL.Path, _ = url.JoinPath(baseURL.Path, "v2")
 	}
 
-	return func(c *Client) {
+	return func(c *Client) error {
 		c.baseURL = baseURL
+		return nil
 	}
 }
 
@@ -49,7 +51,7 @@ func getTransport(client *http.Client) http.RoundTripper {
 }
 
 // NewClient creates a new client with the given options
-func NewClient(opts ...Option) *Client {
+func NewClient(opts ...Option) (*Client, error) {
 	client := &Client{
 		httpClient: &http.Client{},
 		baseURL: url.URL{
@@ -61,12 +63,14 @@ func NewClient(opts ...Option) *Client {
 
 	// Apply all opts
 	for _, opt := range opts {
-		opt(client)
+		if err := opt(client); err != nil {
+			return nil, err
+		}
 	}
 
 	return &Client{
 		Cluster: Cluster{
 			client: client,
 		},
-	}
+	}, nil
 }
