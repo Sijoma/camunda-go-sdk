@@ -11,6 +11,7 @@ type Client struct {
 	baseURL    url.URL
 
 	Cluster Cluster
+	Message Message
 }
 
 // Option represents a configuration option for the Client
@@ -69,8 +70,7 @@ func NewClient(opts ...Option) (*Client, error) {
 	}
 
 	return &Client{
-		Cluster: Cluster{
-			client: client,
-		},
+		Cluster: Cluster{client: client},
+		Message: Message{client: client},
 	}, nil
 }

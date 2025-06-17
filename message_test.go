@@ -12,7 +12,7 @@ import (
 	"github.com/sijoma/camunda-go-sdk/internal"
 )
 
-func TestWithCamunda(t *testing.T) {
+func Test_Camunda_Message(t *testing.T) {
 	ctx := context.Background()
 	suite, err := internal.NewTestSuite(t, ctx)
 	if err != nil {
@@ -27,12 +27,16 @@ func TestWithCamunda(t *testing.T) {
 	)
 	require.NoError(t, err)
 
-	t.Run("Query Topology", func(t *testing.T) {
-		topology, err := c8.Cluster.Topology(t.Context())
+	t.Run("Publish Message", func(t *testing.T) {
+		resp, err := c8.Message.Publish(t.Context(), camunda.MessagePublishRequest{
+			Name:           "a name",
+			CorrelationKey: "a correlation key",
+			TimeToLive:     0,
+			MessageId:      "message-id",
+		})
 		require.NoError(t, err)
 
-		assert.Equal(t, 1, topology.PartitionsCount)
-		assert.Lenf(t, topology.Brokers, 1, "we have one broker")
-		assert.Equal(t, topology.ClusterSize, 1)
+		assert.NotEmptyf(t, resp.MessageKey, "message key should not be empty")
+		assert.Equal(t, "<default>", resp.TenantId)
 	})
 }
