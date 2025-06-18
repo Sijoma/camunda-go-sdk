@@ -39,4 +39,17 @@ func Test_Camunda_Message(t *testing.T) {
 		assert.NotEmptyf(t, resp.MessageKey, "message key should not be empty")
 		assert.Equal(t, "<default>", resp.TenantId)
 	})
+
+	t.Run("Correlate Message", func(t *testing.T) {
+		resp, err := c8.Message.Correlate(t.Context(), camunda.MessageCorrelateRequest{
+			Name:           "a name",
+			CorrelationKey: "a correlation key",
+			Variables: map[string]interface{}{
+				"foo": "bar",
+			},
+		})
+		require.Error(t, err)
+		assert.Contains(t, err.Error(), "Command 'CORRELATE' rejected with code 'NOT_FOUND'")
+		assert.Nil(t, resp)
+	})
 }
