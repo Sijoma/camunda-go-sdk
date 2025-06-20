@@ -62,6 +62,16 @@ func main() {
 }
 ```
 
+Example env vars for use with the 8.8 [Camunda Helm chart](https://artifacthub.io/packages/helm/camunda/camunda-platform):
+```bash
+export CAMUNDA_CLIENT_ID="client" \
+export CAMUNDA_CLIENT_SECRET="secret" \
+export CAMUNDA_OAUTH_URL="https://camunda.com/auth/realms/camunda-platform/protocol/openid-connect/token" \
+export ZEEBE_TOKEN_AUDIENCE="broker" \
+export CAMUNDA_CREDENTIALS_SCOPES="camunda-identity" \
+export ZEEBE_REST_ADDRESS="https://camunda.com/core"
+```
+
 Output
 ```json
 {
