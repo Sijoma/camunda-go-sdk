@@ -72,7 +72,8 @@ func NewClient(opts ...Option) (*Client, error) {
 	}
 
 	return &Client{
-		Cluster: Cluster{client: client},
-		Message: Message{client: client},
+		Cluster:  Cluster{client: client},
+		Message:  Message{client: client},
+		Resource: Resource{client: client},
 	}, nil
 }

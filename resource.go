@@ -3,6 +3,7 @@ package camunda
 import (
 	"context"
 	"fmt"
+	"path"
 )
 
 type Resource struct {
@@ -12,7 +13,7 @@ type Resource struct {
 // TODO: change Resources from string to binary
 type ResourceDeployRequest struct {
 	Resources string `json:"resources"`
-	TeantnId  string `json:"tenantId"`
+	TenantId  string `json:"tenantId"`
 }
 
 // TODO: change Deployments from string to binary
@@ -24,6 +25,7 @@ type ResourceDeployResponse struct {
 
 func (r Resource) Deploy(ctx context.Context, request ResourceDeployRequest) (*ResourceDeployResponse, error) {
 	u := r.client.baseURL
-	fmt.Println(u)
+	u.Path = path.Join(r.client.baseURL.Path, "deployments")
+	fmt.Println(u.Path)
 	return nil, nil
 }

@@ -35,7 +35,7 @@ func main() {
 
 	payload := camunda.ResourceDeployRequest{
 		Resources: "test",
-		TeantnId:  "test",
+		TenantId:  "test",
 	}
 
 	// this line causes an error
