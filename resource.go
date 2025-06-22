@@ -37,7 +37,7 @@ type ResourceGetRequest struct {
 	ResourceKey string `json:"resourceKey"`
 }
 
-type ResourceGetRepsonse struct {
+type ResourceGetResponse struct {
 	ResourceName string `json:"resourceName"`
 	Version      int    `json:"version"`
 	VersionTag   string `json:"versionTag"`
@@ -46,7 +46,7 @@ type ResourceGetRepsonse struct {
 	ResourceKey  string `json:"resourceKey"`
 }
 
-func (r Resource) Get(ctx context.Context, request ResourceGetRequest) (*ResourceGetRepsonse, error) {
+func (r Resource) Get(ctx context.Context, request ResourceGetRequest) (*ResourceGetResponse, error) {
 	u := r.client.baseURL
 	u.Path = path.Join(r.client.baseURL.Path, "resources", request.ResourceKey)
 	fmt.Println(u.Path)
@@ -69,7 +69,7 @@ func (r Resource) Get(ctx context.Context, request ResourceGetRequest) (*Resourc
 
 	switch res.StatusCode {
 	case http.StatusOK:
-		var getResponse ResourceGetRepsonse
+		var getResponse ResourceGetResponse
 		err = json.NewDecoder(res.Body).Decode(&getResponse)
 		if err != nil {
 			return nil, fmt.Errorf("publish: %w", err)
