@@ -35,9 +35,7 @@ func (r Resource) Deploy(ctx context.Context, request ResourceDeployRequest, fil
 	u.Path = path.Join(r.client.baseURL.Path, "deployments")
 
 	buf := &bytes.Buffer{}
-
 	mpw := multipart.NewWriter(buf)
-
 	f, err := os.Open(filePath)
 	if err != nil {
 		return nil, err
@@ -52,8 +50,6 @@ func (r Resource) Deploy(ctx context.Context, request ResourceDeployRequest, fil
 	if err != nil {
 		log.Fatalln(err)
 	}
-
-	defer f.Close()
 
 	// Close the multipart writer before creating the request
 	err = mpw.Close()
@@ -75,8 +71,6 @@ func (r Resource) Deploy(ctx context.Context, request ResourceDeployRequest, fil
 		return nil, err
 	}
 
-	defer resp.Body.Close()
-
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
@@ -85,7 +79,9 @@ func (r Resource) Deploy(ctx context.Context, request ResourceDeployRequest, fil
 	fmt.Println(body)
 	fmt.Println(resp.StatusCode)
 
-	//---
+	defer f.Close()
+	defer resp.Body.Close()
+
 	fmt.Println(u.Path)
 	return nil, nil
 }
