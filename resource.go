@@ -5,7 +5,11 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"io"
+	"log"
+	"mime/multipart"
 	"net/http"
+	"os"
 	"path"
 )
 
@@ -26,9 +30,62 @@ type ResourceDeployResponse struct {
 	Deployments   string `json:"deployments"`
 }
 
-func (r Resource) Deploy(ctx context.Context, request ResourceDeployRequest) (*ResourceDeployResponse, error) {
+func (r Resource) Deploy(ctx context.Context, request ResourceDeployRequest, filePath string) (*ResourceDeployResponse, error) {
 	u := r.client.baseURL
 	u.Path = path.Join(r.client.baseURL.Path, "deployments")
+
+	buf := &bytes.Buffer{}
+
+	mpw := multipart.NewWriter(buf)
+
+	f, err := os.Open(filePath)
+	if err != nil {
+		return nil, err
+	}
+
+	fWriter, err := mpw.CreateFormFile("resources", filePath)
+	if err != nil {
+		return nil, err
+	}
+
+	_, err = io.Copy(fWriter, f)
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	defer f.Close()
+
+	// Close the multipart writer before creating the request
+	err = mpw.Close()
+	if err != nil {
+		return nil, err
+	}
+
+	// set up the request
+
+	req, err := http.NewRequestWithContext(ctx, "POST", u.String(), buf)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", mpw.FormDataContentType()) // detect the form data content type
+
+	resp, err := r.client.httpClient.Do(req)
+	if err != nil {
+		return nil, err
+	}
+
+	defer resp.Body.Close()
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+	fmt.Println(u.String())
+	fmt.Println(body)
+	fmt.Println(resp.StatusCode)
+
+	//---
 	fmt.Println(u.Path)
 	return nil, nil
 }

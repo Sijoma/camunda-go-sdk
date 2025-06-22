@@ -38,7 +38,7 @@ func main() {
 		TenantId:  "test",
 	}
 
-	resource, err := c8.Resource.Deploy(ctx, payload)
+	resource, err := c8.Resource.Deploy(ctx, payload, "/Users/hamzamasood/Desktop/diagram_1.bpmn")
 	if err != nil {
 		fmt.Println(err)
 		return
