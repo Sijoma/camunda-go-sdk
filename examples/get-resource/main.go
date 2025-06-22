@@ -9,6 +9,7 @@ import (
 	"github.com/sijoma/camunda-go-sdk"
 )
 
+// only works with deployed RPA resources
 func main() {
 	ctx := context.Background()
 	clientID := os.Getenv("CAMUNDA_CLIENT_ID")

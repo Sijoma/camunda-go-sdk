@@ -48,7 +48,8 @@ type ResourceGetRepsonse struct {
 
 func (r Resource) Get(ctx context.Context, request ResourceGetRequest) (*ResourceGetRepsonse, error) {
 	u := r.client.baseURL
-	u.Path = path.Join(r.client.baseURL.Path, request.ResourceKey)
+	u.Path = path.Join(r.client.baseURL.Path, "resources", request.ResourceKey)
+	fmt.Println(u.Path)
 	requestBody, err := json.Marshal(request)
 	if err != nil {
 		return nil, fmt.Errorf("publish marshal: %w", err)
@@ -75,12 +76,11 @@ func (r Resource) Get(ctx context.Context, request ResourceGetRequest) (*Resourc
 		}
 		return &getResponse, nil
 	default:
-		// var errorResponse ErrorResponse
-		// err = json.NewDecoder(res.Body).Decode(&errorResponse)
-		// if err != nil {
-		// 	return nil, fmt.Errorf("publish: %w", err)
-		// }
-		// return nil, fmt.Errorf("publish: %s", errorResponse.Detail)
-		return nil, fmt.Errorf("didnt work")
+		var errorResponse ErrorResponse
+		err = json.NewDecoder(res.Body).Decode(&errorResponse)
+		if err != nil {
+			return nil, fmt.Errorf("couldn't get error: %w", err)
+		}
+		return nil, fmt.Errorf("get resource error title: %s\nget resource error detail %s", errorResponse.Title, errorResponse.Detail)
 	}
 }
