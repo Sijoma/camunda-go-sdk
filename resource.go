@@ -1,8 +1,11 @@
 package camunda
 
 import (
+	"bytes"
 	"context"
+	"encoding/json"
 	"fmt"
+	"net/http"
 	"path"
 )
 
@@ -28,4 +31,56 @@ func (r Resource) Deploy(ctx context.Context, request ResourceDeployRequest) (*R
 	u.Path = path.Join(r.client.baseURL.Path, "deployments")
 	fmt.Println(u.Path)
 	return nil, nil
+}
+
+type ResourceGetRequest struct {
+	ResourceKey string `json:"resourceKey"`
+}
+
+type ResourceGetRepsonse struct {
+	ResourceName string `json:"resourceName"`
+	Version      int    `json:"version"`
+	VersionTag   string `json:"versionTag"`
+	ResourceId   string `json:"resourceId"`
+	TenantId     string `json:"tenantId"`
+	ResourceKey  string `json:"resourceKey"`
+}
+
+func (r Resource) Get(ctx context.Context, request ResourceGetRequest) (*ResourceGetRepsonse, error) {
+	u := r.client.baseURL
+	u.Path = path.Join(r.client.baseURL.Path, request.ResourceKey)
+	requestBody, err := json.Marshal(request)
+	if err != nil {
+		return nil, fmt.Errorf("publish marshal: %w", err)
+	}
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, u.String(), bytes.NewBuffer(requestBody))
+	if err != nil {
+		return nil, err
+	}
+	req.Header.Add("Accept", "application/json")
+	req.Header.Add("Content-Type", "application/json")
+
+	res, err := r.client.httpClient.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer res.Body.Close()
+
+	switch res.StatusCode {
+	case http.StatusOK:
+		var getResponse ResourceGetRepsonse
+		err = json.NewDecoder(res.Body).Decode(&getResponse)
+		if err != nil {
+			return nil, fmt.Errorf("publish: %w", err)
+		}
+		return &getResponse, nil
+	default:
+		// var errorResponse ErrorResponse
+		// err = json.NewDecoder(res.Body).Decode(&errorResponse)
+		// if err != nil {
+		// 	return nil, fmt.Errorf("publish: %w", err)
+		// }
+		// return nil, fmt.Errorf("publish: %s", errorResponse.Detail)
+		return nil, fmt.Errorf("didnt work")
+	}
 }

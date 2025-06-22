@@ -33,12 +33,11 @@ func main() {
 		return
 	}
 
-	payload := camunda.ResourceDeployRequest{
-		Resources: "test",
-		TenantId:  "test",
+	payload := camunda.ResourceGetRequest{
+		ResourceKey: "123",
 	}
 
-	resource, err := c8.Resource.Deploy(ctx, payload)
+	resource, err := c8.Resource.Get(ctx, payload)
 	if err != nil {
 		fmt.Println(err)
 		return
