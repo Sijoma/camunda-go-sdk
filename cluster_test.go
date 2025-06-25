@@ -22,7 +22,7 @@ func TestWithCamunda(t *testing.T) {
 	camundaURL, err := suite.CamundaEndpoint()
 	require.NoError(t, err)
 	baseURL, _ := url.Parse(camundaURL)
-	c8, err := camunda.NewClient(
+	c8, err := camunda.NewOrchestrationClusterClient(
 		camunda.WithBaseURL(*baseURL),
 	)
 	require.NoError(t, err)

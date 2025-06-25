@@ -111,7 +111,7 @@ func (t topologyWaitStrategy) WaitUntilReady(ctx context.Context, target wait.St
 				return err
 			}
 
-			client, err := camunda.NewClient(camunda.WithBaseURL(*baseURL))
+			client, err := camunda.NewOrchestrationClusterClient(camunda.WithBaseURL(*baseURL))
 			if err != nil {
 				return err
 			}

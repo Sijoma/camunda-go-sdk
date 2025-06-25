@@ -30,7 +30,8 @@ func WithTransport(transport http.RoundTripper) Option {
 	}
 }
 
-// WithBaseURL sets the base URL for the client
+// WithBaseURL sets the base URL for the orchestration cluster API
+// https://docs.camunda.io/docs/next/apis-tools/camunda-api-rest/camunda-api-rest-overview/
 func WithBaseURL(baseURL url.URL) Option {
 	// Ensure path ends with /v2
 	if !strings.HasSuffix(baseURL.Path, "v2") {
@@ -51,8 +52,8 @@ func getTransport(client *http.Client) http.RoundTripper {
 	return client.Transport
 }
 
-// NewClient creates a new client with the given options
-func NewClient(opts ...Option) (*Client, error) {
+// NewOrchestrationClusterClient creates a new client with the given options
+func NewOrchestrationClusterClient(opts ...Option) (*Client, error) {
 	client := &Client{
 		httpClient: &http.Client{},
 		baseURL: url.URL{
