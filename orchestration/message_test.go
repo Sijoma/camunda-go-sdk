@@ -1,4 +1,4 @@
-package camunda_test
+package orchestration_test
 
 import (
 	"context"
@@ -8,8 +8,8 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/sijoma/camunda-go-sdk"
 	"github.com/sijoma/camunda-go-sdk/internal"
+	"github.com/sijoma/camunda-go-sdk/orchestration"
 )
 
 func Test_Camunda_Message(t *testing.T) {
@@ -22,13 +22,13 @@ func Test_Camunda_Message(t *testing.T) {
 	camundaURL, err := suite.CamundaEndpoint()
 	require.NoError(t, err)
 	baseURL, _ := url.Parse(camundaURL)
-	c8, err := camunda.NewOrchestrationClusterClient(
-		camunda.WithBaseURL(*baseURL),
+	c8, err := orchestration.NewClient(
+		orchestration.WithBaseURL(*baseURL),
 	)
 	require.NoError(t, err)
 
 	t.Run("Publish Message", func(t *testing.T) {
-		resp, err := c8.Message.Publish(t.Context(), camunda.MessagePublishRequest{
+		resp, err := c8.Message.Publish(t.Context(), orchestration.MessagePublishRequest{
 			Name:           "a name",
 			CorrelationKey: "a correlation key",
 			TimeToLive:     0,
@@ -41,7 +41,7 @@ func Test_Camunda_Message(t *testing.T) {
 	})
 
 	t.Run("Correlate Message", func(t *testing.T) {
-		resp, err := c8.Message.Correlate(t.Context(), camunda.MessageCorrelateRequest{
+		resp, err := c8.Message.Correlate(t.Context(), orchestration.MessageCorrelateRequest{
 			Name:           "a name",
 			CorrelationKey: "a correlation key",
 			Variables: map[string]interface{}{

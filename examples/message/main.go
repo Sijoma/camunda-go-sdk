@@ -7,7 +7,7 @@ import (
 	"net/url"
 	"os"
 
-	"github.com/sijoma/camunda-go-sdk"
+	"github.com/sijoma/camunda-go-sdk/orchestration"
 )
 
 func main() {
@@ -25,16 +25,16 @@ func main() {
 
 	fmt.Println("EXAMPLE: Config", clientID, clientSecret, tokenURL, audience, scopes, baseURL)
 
-	c8, err := camunda.NewOrchestrationClusterClient(
-		camunda.WithBaseURL(*baseURL),
-		camunda.WithOAuth(clientID, clientSecret, tokenURL, audience, scopes),
+	c8, err := orchestration.NewClient(
+		orchestration.WithBaseURL(*baseURL),
+		orchestration.WithOAuth(clientID, clientSecret, tokenURL, audience, scopes),
 	)
 	if err != nil {
 		fmt.Println("failed creating client", err)
 		return
 	}
 
-	payload := camunda.MessagePublishRequest{
+	payload := orchestration.MessagePublishRequest{
 		Name:           "a name",
 		CorrelationKey: "correlation-key",
 		TimeToLive:     0,
