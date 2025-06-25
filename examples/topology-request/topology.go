@@ -25,7 +25,7 @@ func main() {
 
 	fmt.Println("EXAMPLE: Config", clientID, clientSecret, tokenURL, audience, scopes, baseURL)
 
-	c8, err := camunda.NewClient(
+	c8, err := camunda.NewOrchestrationClusterClient(
 		camunda.WithBaseURL(*baseURL),
 		camunda.WithOAuth(clientID, clientSecret, tokenURL, audience, scopes),
 	)
