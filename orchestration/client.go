@@ -1,4 +1,4 @@
-package camunda
+package orchestration
 
 import (
 	"net/http"
@@ -52,8 +52,8 @@ func getTransport(client *http.Client) http.RoundTripper {
 	return client.Transport
 }
 
-// NewOrchestrationClusterClient creates a new client with the given options
-func NewOrchestrationClusterClient(opts ...Option) (*Client, error) {
+// NewClient creates a new client with the given options
+func NewClient(opts ...Option) (*Client, error) {
 	client := &Client{
 		httpClient: &http.Client{},
 		baseURL: url.URL{

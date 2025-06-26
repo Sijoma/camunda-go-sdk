@@ -11,7 +11,7 @@ import (
 	"github.com/testcontainers/testcontainers-go"
 	"github.com/testcontainers/testcontainers-go/wait"
 
-	"github.com/sijoma/camunda-go-sdk"
+	"github.com/sijoma/camunda-go-sdk/orchestration"
 )
 
 type TestSuite struct {
@@ -111,7 +111,7 @@ func (t topologyWaitStrategy) WaitUntilReady(ctx context.Context, target wait.St
 				return err
 			}
 
-			client, err := camunda.NewOrchestrationClusterClient(camunda.WithBaseURL(*baseURL))
+			client, err := orchestration.NewClient(orchestration.WithBaseURL(*baseURL))
 			if err != nil {
 				return err
 			}
