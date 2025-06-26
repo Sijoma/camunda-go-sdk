@@ -15,10 +15,11 @@ import (
 )
 
 type TestSuite struct {
-	host             string
-	gatewayEndpoint  string
-	camundaContainer testcontainers.Container
-	t                testing.TB
+	host               string
+	gatewayEndpoint    string
+	managementEndpoint string
+	camundaContainer   testcontainers.Container
+	t                  testing.TB
 }
 
 func NewTestSuite(t testing.TB, ctx context.Context) (*TestSuite, error) {
@@ -43,10 +44,17 @@ func (ts *TestSuite) CamundaEndpoint() (string, error) {
 	return ts.gatewayEndpoint, nil
 }
 
+func (ts *TestSuite) ManagementEndpoint() (string, error) {
+	if ts.managementEndpoint == "" {
+		return "", fmt.Errorf("management endpoint not initialized")
+	}
+	return ts.managementEndpoint, nil
+}
+
 func (ts *TestSuite) setupCamunda(ctx context.Context) error {
 	req := testcontainers.ContainerRequest{
 		Image:        "camunda/zeebe:latest",
-		ExposedPorts: []string{"26500/tcp", "8080/tcp"},
+		ExposedPorts: []string{"26500/tcp", "8080/tcp", "9600/tcp"},
 		WaitingFor: wait.ForAll(
 			&topologyWaitStrategy{},
 			wait.ForLog("Tomcat started on port 8080 (http) with context path"),
@@ -69,6 +77,12 @@ func (ts *TestSuite) setupCamunda(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
+
+	ts.managementEndpoint, err = camundaContainer.PortEndpoint(ctx, "9600/tcp", "http")
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
