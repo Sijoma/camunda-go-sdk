@@ -6,7 +6,7 @@ import (
 	"net/url"
 	"os"
 
-	"github.com/sijoma/camunda-go-sdk"
+	"github.com/sijoma/camunda-go-sdk/orchestration"
 )
 
 // only works with deployed RPA resources
@@ -25,16 +25,16 @@ func main() {
 
 	fmt.Println("EXAMPLE: Config", clientID, clientSecret, tokenURL, audience, scopes, baseURL)
 
-	c8, err := camunda.NewClient(
-		camunda.WithBaseURL(*baseURL),
-		camunda.WithOAuth(clientID, clientSecret, tokenURL, audience, scopes),
+	c8, err := orchestration.NewClient(
+		orchestration.WithBaseURL(*baseURL),
+		orchestration.WithOAuth(clientID, clientSecret, tokenURL, audience, scopes),
 	)
 	if err != nil {
 		fmt.Println("failed creating client", err)
 		return
 	}
 
-	payload := camunda.ResourceGetRequest{
+	payload := orchestration.ResourceGetRequest{
 		ResourceKey: "123",
 	}
 

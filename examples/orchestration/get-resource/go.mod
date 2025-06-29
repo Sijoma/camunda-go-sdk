@@ -1,4 +1,4 @@
-module github.com/sijoma/camunda-go-sdk/examples/get-resource
+module github.com/sijoma/camunda-go-sdk/examples/orchestration/get-resource
 
 go 1.24.4
 
