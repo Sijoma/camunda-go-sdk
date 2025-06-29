@@ -1,9 +1,11 @@
 go 1.24
 
+replace github.com/sijoma/camunda-go-sdk => ./
+
 // This makes sure we use the local client lib for the examples
+
 use (
-	.
-	examples/orchestration/topology-request
-	examples/orchestration/message
-	examples/management
+	./examples/management
+	./examples/orchestration/message
+	./examples/orchestration/topology-request
 )
