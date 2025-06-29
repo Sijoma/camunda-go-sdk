@@ -72,6 +72,8 @@ export CAMUNDA_CREDENTIALS_SCOPES="camunda-identity" \
 export ZEEBE_REST_ADDRESS="https://camunda.com/core"
 ```
 
+Before running an example, make sure to run `go mod tidy` in the module directory.
+
 Output
 ```json
 {
