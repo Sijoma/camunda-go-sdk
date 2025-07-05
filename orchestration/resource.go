@@ -58,7 +58,7 @@ func (r Resource) Get(ctx context.Context, request ResourceGetRequest) (*Resourc
 		var errorResponse ErrorResponse
 		err = json.NewDecoder(res.Body).Decode(&errorResponse)
 		if err != nil {
-			return nil, fmt.Errorf("couldn't get error: %w", err)
+			return nil, fmt.Errorf("couldn't decode response: %w", err)
 		}
 		return nil, fmt.Errorf("get resource error title: %s\nget resource error detail %s", errorResponse.Title, errorResponse.Detail)
 	}
