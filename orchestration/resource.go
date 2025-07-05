@@ -31,7 +31,7 @@ func (r Resource) Get(ctx context.Context, request ResourceGetRequest) (*Resourc
 	u.Path = path.Join(r.client.baseURL.Path, "resources", request.ResourceKey)
 	requestBody, err := json.Marshal(request)
 	if err != nil {
-		return nil, fmt.Errorf("publish marshal: %w", err)
+		return nil, fmt.Errorf("get: %w", err)
 	}
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, u.String(), bytes.NewBuffer(requestBody))
 	if err != nil {
