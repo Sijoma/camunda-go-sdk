@@ -10,8 +10,9 @@ type Client struct {
 	httpClient *http.Client
 	baseURL    url.URL
 
-	Cluster Cluster
-	Message Message
+	Cluster  Cluster
+	Message  Message
+	Resource Resource
 }
 
 // Option represents a configuration option for the Client
@@ -71,7 +72,8 @@ func NewClient(opts ...Option) (*Client, error) {
 	}
 
 	return &Client{
-		Cluster: Cluster{client: client},
-		Message: Message{client: client},
+		Cluster:  Cluster{client: client},
+		Message:  Message{client: client},
+		Resource: Resource{client: client},
 	}, nil
 }
