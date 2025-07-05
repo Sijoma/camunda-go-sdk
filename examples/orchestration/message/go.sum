@@ -1,0 +1,4 @@
+github.com/sijoma/camunda-go-sdk v0.0.0-20250629221903-1c789c485da6 h1:08dJrjh/BvIY+kI0L58LsJosfmrb0fcx4z4o79xHRLY=
+github.com/sijoma/camunda-go-sdk v0.0.0-20250629221903-1c789c485da6/go.mod h1:tH6ykvHGQto03/CNU4iuhmi2vtPUCL7HaBuZeRBAGKQ=
+golang.org/x/oauth2 v0.30.0 h1:dnDm7JmhM45NNpd8FDDeLhK6FwqbOf4MLCM9zb1BOHI=
+golang.org/x/oauth2 v0.30.0/go.mod h1:B++QgG3ZKulg6sRPGD/mqlHQs5rB3Ml9erfeDY7xKlU=

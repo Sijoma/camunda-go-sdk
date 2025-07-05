@@ -2,6 +2,7 @@ package orchestration_test
 
 import (
 	"context"
+	"errors"
 	"net/url"
 	"testing"
 
@@ -38,6 +39,18 @@ func Test_Camunda_Message(t *testing.T) {
 
 		assert.NotEmptyf(t, resp.MessageKey, "message key should not be empty")
 		assert.Equal(t, "<default>", resp.TenantId)
+	})
+
+	t.Run("Publish Message missing Name", func(t *testing.T) {
+		resp, err := c8.Message.Publish(t.Context(), orchestration.MessagePublishRequest{
+			CorrelationKey: "a correlation key",
+			TimeToLive:     0,
+			MessageId:      "message-id",
+		})
+		require.Error(t, err)
+		assert.True(t, errors.As(err, &orchestration.ErrorResponse{}))
+		assert.Contains(t, err.Error(), "No name provided.")
+		assert.Nilf(t, resp, "response should be nil when an error occurs")
 	})
 
 	t.Run("Correlate Message", func(t *testing.T) {
