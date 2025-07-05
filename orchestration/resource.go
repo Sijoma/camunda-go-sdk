@@ -29,7 +29,6 @@ type ResourceGetResponse struct {
 func (r Resource) Get(ctx context.Context, request ResourceGetRequest) (*ResourceGetResponse, error) {
 	u := r.client.baseURL
 	u.Path = path.Join(r.client.baseURL.Path, "resources", request.ResourceKey)
-	fmt.Println(u.Path)
 	requestBody, err := json.Marshal(request)
 	if err != nil {
 		return nil, fmt.Errorf("publish marshal: %w", err)
