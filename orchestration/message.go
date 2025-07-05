@@ -27,6 +27,7 @@ type MessagePublishResponse struct {
 	MessageKey string `json:"messageKey"`
 }
 
+// TODO: move this to a parent file for other scenarios to access
 type ErrorResponse struct {
 	Type     string `json:"type"`
 	Title    string `json:"title"`
