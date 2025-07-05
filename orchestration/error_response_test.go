@@ -29,6 +29,7 @@ func Test_handleErrorResponse(t *testing.T) {
 		// Verify the error
 		require.Error(t, err)
 		assert.Contains(t, err.Error(), "test-prefix")
+		assert.Contains(t, err.Error(), "Title: Error Title")
 		assert.Contains(t, err.Error(), "error-type")
 		assert.Contains(t, err.Error(), "400")
 		assert.Contains(t, err.Error(), "Error details")
@@ -79,6 +80,7 @@ func Test_handleErrorResponse(t *testing.T) {
 		// Verify the error contains the prefix
 		require.Error(t, err)
 		assert.Contains(t, err.Error(), "another-prefix")
+		assert.Contains(t, err.Error(), "Title: Error Title")
 		assert.NotContains(t, err.Error(), "test-prefix")
 	})
 

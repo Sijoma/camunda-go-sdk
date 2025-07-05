@@ -15,7 +15,7 @@ type ErrorResponse struct {
 }
 
 func (e ErrorResponse) Error() string {
-	return fmt.Sprintf("Type: %s (Status: %d) - Detail: %s, Instance: %s", e.Type, e.Status, e.Detail, e.Instance)
+	return fmt.Sprintf("Title: %s | Type: %s (Status: %d) - Detail: %s, Instance: %s", e.Title, e.Type, e.Status, e.Detail, e.Instance)
 }
 
 // handleErrorResponse decodes and returns an error from an ErrorResponse
