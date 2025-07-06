@@ -40,8 +40,10 @@ func TestCamunda_Management(t *testing.T) {
 		// Print the topology information
 		fmt.Printf("Topology Version: %d\n", topology.Version)
 		fmt.Printf("Number of Brokers: %d\n", len(topology.Brokers))
+		fmt.Printf("Broker state: %v\n", topology.Brokers[0].State)
 
 		// Assert that the topology has valid data
+		assert.Equal(t, topology.Brokers[0].State, management.BrokerStateActive, "First broker should be in active state")
 		assert.GreaterOrEqual(t, topology.Version, int64(0), "Topology version should be non-negative")
 		assert.GreaterOrEqual(t, len(topology.Brokers), 0, "Brokers list can be empty but not nil")
 		fmt.Printf("Pending change: %v\n", topology.PendingChange)
