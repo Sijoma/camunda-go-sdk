@@ -31,19 +31,38 @@ type TopologyVersion int64
 // BrokerState represents the state of a broker
 type BrokerState struct {
 	ID            BrokerId         `json:"id"`
-	State         string           `json:"state"`
+	State         BrokerStateCode  `json:"state"`
 	Version       int64            `json:"version"`
 	LastUpdatedAt string           `json:"lastUpdatedAt"`
 	Partitions    []PartitionState `json:"partitions"`
 }
 
+type BrokerStateCode string
+
+const (
+	BrokerStateActive  BrokerStateCode = "ACTIVE"
+	BrokerStateUnknown BrokerStateCode = "UNKNOWN"
+	BrokerStateJoining BrokerStateCode = "JOINING"
+	BrokerStateLeaving BrokerStateCode = "LEAVING"
+	BrokerStateLeft    BrokerStateCode = "LEFT"
+)
+
 // PartitionState represents the state of a partition
 type PartitionState struct {
-	ID       PartitionId     `json:"id"`
-	State    string          `json:"state"`
-	Priority int32           `json:"priority"`
-	Config   PartitionConfig `json:"config,omitempty"`
+	ID       PartitionId        `json:"id"`
+	State    PartitionStateCode `json:"state"`
+	Priority int32              `json:"priority"`
+	Config   PartitionConfig    `json:"config,omitempty"`
 }
+
+type PartitionStateCode string
+
+const (
+	PartitionStateUnknown PartitionStateCode = "UNKNOWN"
+	PartitionStateJoining PartitionStateCode = "JOINING"
+	PartitionStateActive  PartitionStateCode = "ACTIVE"
+	PartitionStateLeaving PartitionStateCode = "LEAVING"
+)
 
 // PartitionConfig represents the configuration of a partition
 type PartitionConfig struct {
@@ -57,9 +76,17 @@ type ExportingConfig struct {
 
 // ExporterConfig represents the configuration of an exporter
 type ExporterConfig struct {
-	ID    string `json:"id"`
-	State string `json:"state"`
+	ID    string            `json:"id"`
+	State ExporterStateCode `json:"state"`
 }
+
+type ExporterStateCode string
+
+const (
+	ExporterStateUnknown ExporterStateCode = "UNKNOWN"
+	ExporterStateActive  ExporterStateCode = "ENABLED"
+	ExporterStateLeaving ExporterStateCode = "DISABLED"
+)
 
 // Operation represents a topology change operation
 type Operation struct {
