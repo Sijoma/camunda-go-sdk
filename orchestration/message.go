@@ -27,14 +27,6 @@ type MessagePublishResponse struct {
 	MessageKey string `json:"messageKey"`
 }
 
-type ErrorResponse struct {
-	Type     string `json:"type"`
-	Title    string `json:"title"`
-	Status   int    `json:"status"`
-	Detail   string `json:"detail"`
-	Instance string `json:"instance"`
-}
-
 func (m Message) Publish(ctx context.Context, request MessagePublishRequest) (*MessagePublishResponse, error) {
 	u := m.client.baseURL
 	u.Path = path.Join(m.client.baseURL.Path, "messages/publication")
@@ -65,12 +57,7 @@ func (m Message) Publish(ctx context.Context, request MessagePublishRequest) (*M
 		}
 		return &publishResponse, nil
 	default:
-		var errorResponse ErrorResponse
-		err = json.NewDecoder(res.Body).Decode(&errorResponse)
-		if err != nil {
-			return nil, fmt.Errorf("publish: %w", err)
-		}
-		return nil, fmt.Errorf("publish: %s", errorResponse.Detail)
+		return nil, handleErrorResponse(res.Body, "publish")
 	}
 }
 
@@ -117,11 +104,6 @@ func (m Message) Correlate(ctx context.Context, request MessageCorrelateRequest)
 		}
 		return &correlateResponse, nil
 	default:
-		var errorResponse ErrorResponse
-		err = json.NewDecoder(res.Body).Decode(&errorResponse)
-		if err != nil {
-			return nil, fmt.Errorf("correlate: %w", err)
-		}
-		return nil, fmt.Errorf("correlate: %s", errorResponse.Detail)
+		return nil, handleErrorResponse(res.Body, "correlate")
 	}
 }
