@@ -12,6 +12,7 @@ type Client struct {
 
 	Cluster Cluster
 	Message Message
+	Job     Job
 }
 
 // Option represents a configuration option for the Client
@@ -73,5 +74,6 @@ func NewClient(opts ...Option) (*Client, error) {
 	return &Client{
 		Cluster: Cluster{client: client},
 		Message: Message{client: client},
+		Job:     Job{client: client},
 	}, nil
 }
