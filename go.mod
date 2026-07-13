@@ -1,12 +1,12 @@
 module github.com/sijoma/camunda-go-sdk
 
-go 1.24
+go 1.25.0
 
 require (
 	github.com/docker/go-connections v0.5.0
 	github.com/stretchr/testify v1.10.0
 	github.com/testcontainers/testcontainers-go v0.38.0
-	golang.org/x/oauth2 v0.30.0
+	golang.org/x/oauth2 v0.36.0
 )
 
 require (
